@@ -10,7 +10,9 @@ from akamai.papi import get_property_descriptor, get_property_activations
 from akamai.shared import Network
 
 try:
-    query = json.loads(sys.stdin.read())
+    queryData = sys.stdin.read()
+    print(queryData, file=sys.stderr)
+    query = json.loads(queryData)
     check = PropertyActivationCheck(query)
 except KeyError as e:
     print("Expecting option: {0}".format(e), file=sys.stderr)
