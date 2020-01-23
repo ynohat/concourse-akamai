@@ -44,6 +44,7 @@ try:
         rules = dict(rules=dict(
             name=rules.get("rules").get("name"),
             children=rules.get("rules").get("children"),
+            behaviors=rules.get("rules").get("behaviors"),
             options=rules.get("rules").get("options")
         ))
         fd.write(json.dumps(rules, indent="  "))
