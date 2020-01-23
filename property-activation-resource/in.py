@@ -50,8 +50,8 @@ try:
 
     # Output version and metadata
     print(json.dumps(dict(
-        version=dict(activationId=input.activationId,
-                     propertyVersion=atv.get("propertyVersion")),
+        version=dict(activationId=str(input.activationId),
+                     propertyVersion=str(atv.get("propertyVersion"))),
         metadata=[
             dict(name="propertyName", value=str(atv.get("propertyName"))),
             dict(name="activationType", value=str(atv.get("activationType"))),
