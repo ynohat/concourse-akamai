@@ -31,8 +31,8 @@ try:
     filtered = filter(source.match, atvs)
     latest = filter(lambda atv: atv.get("activationId") >= str(check.activationId), filtered)
     atv_ids = map(lambda atv: dict(
-        activationId=atv["activationId"],
-        propertyVersion=atv["propertyVersion"]
+        activationId=str(atv["activationId"]),
+        propertyVersion=str(atv["propertyVersion"])
     ), latest)
     print(json.dumps(sorted(atv_ids, key=lambda atv: atv.get("activationId"))))
 except Exception as e:

@@ -53,13 +53,13 @@ try:
         version=dict(activationId=input.activationId,
                      propertyVersion=atv.get("propertyVersion")),
         metadata=[
-            dict(name="propertyName", value=atv.get("propertyName")),
-            dict(name="activationType", value=atv.get("activationType")),
-            dict(name="status", value=atv.get("status")),
-            dict(name="submitDate", value=atv.get("submitDate")),
-            dict(name="updateDate", value=atv.get("updateDate")),
-            dict(name="updatedByUser", value=pv.get("updatedByUser")),
-            dict(name="note", value=pv.get("note")),
+            dict(name="propertyName", value=str(atv.get("propertyName"))),
+            dict(name="activationType", value=str(atv.get("activationType"))),
+            dict(name="status", value=str(atv.get("status"))),
+            dict(name="submitDate", value=str(atv.get("submitDate"))),
+            dict(name="updateDate", value=str(atv.get("updateDate"))),
+            dict(name="updatedByUser", value=str(pv.get("updatedByUser"))),
+            dict(name="note", value=str(pv.get("note"))),
 
         ]
     )))
