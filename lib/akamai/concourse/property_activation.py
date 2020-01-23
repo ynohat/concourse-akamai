@@ -5,7 +5,7 @@ from ..papi import PropertyActivationStatus, PropertyActivationType
 class PropertyActivationCheck(object):
     def __init__(self, kv):
         self.source = PropertyActivationSource(kv.get("source"))
-        version = kv.get("version", {})
+        version = kv.get("version", {}) or {}
         self.activationId = version.get("activationId", None)
         self.propertyVersion = version.get("propertyVersion", None)
 
