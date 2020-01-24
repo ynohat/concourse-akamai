@@ -22,7 +22,7 @@ class PropertyActivationStatus(Enum):
     DEACTIVATED = "DEACTIVATED"
 
 class PropertyDescriptor(object):
-    def __init__(self, contractId, groupId, propertyId, **kwargs):
+    def __init__(self, contractId, groupId, propertyId, propertyName, **kwargs):
         self.contractId = contractId
         self.groupId = groupId
         self.propertyId = propertyId
@@ -36,9 +36,10 @@ def get_property_descriptor(session, propertyName):
         raise PAPIError("{0} returned status {1}".format(url, result.status_code))
     result = result.json()
     versions = result.get("versions", {}).get("items", [])
-    if len(versions) > 0:
-        return PropertyDescriptor(**versions[0])
-    raise PAPIError("get_property did not find any versions for {0}".format(propertyName))
+    version = next(filter(lambda v: v.get("propertyName") == propertyName, versions), None)
+    if version != None:
+        return PropertyDescriptor(**version)
+    return None
 
 def get_property_activations(session, contractId, groupId, propertyId):
     url = "/papi/v1/properties/{propertyId}/activations".format(
@@ -48,6 +49,8 @@ def get_property_activations(session, contractId, groupId, propertyId):
         contractId=contractId,
         groupId=groupId
     ))
+    if result.status_code == 404:
+        return []
     if result.status_code != 200:
         raise PAPIError("{0} returned status {1}".format(url, result.status_code))
     activations = result.json().get("activations", {}).get("items", [])
@@ -62,6 +65,8 @@ def get_property_activation(session, contractId, groupId, propertyId, activation
         contractId=contractId,
         groupId=groupId
     ))
+    if result.status_code == 404:
+        return None
     if result.status_code != 200:
         raise PAPIError("{0} returned status {1}".format(url, result.status_code))
     activations = result.json().get("activations", {}).get("items", [])
@@ -76,6 +81,8 @@ def get_property_version(session, contractId, groupId, propertyId, propertyVersi
         contractId=contractId,
         groupId=groupId
     ))
+    if result.status_code == 404:
+        return None
     if result.status_code != 200:
         raise PAPIError("{0} returned status {1}".format(url, result.status_code))
     return result.json().get("versions", {}).get("items")[0]
@@ -90,6 +97,8 @@ def get_property_rule_tree(session, contractId, groupId, propertyId, propertyVer
         groupId=groupId,
         validateRules=False
     ))
+    if result.status_code == 404:
+        return None
     if result.status_code != 200:
         raise PAPIError("{0} returned status {1}".format(url, result.status_code))
     return result.json()

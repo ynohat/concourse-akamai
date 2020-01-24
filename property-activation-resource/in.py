@@ -60,8 +60,7 @@ try:
             dict(name="submitDate", value=str(atv.get("submitDate"))),
             dict(name="updateDate", value=str(atv.get("updateDate"))),
             dict(name="updatedByUser", value=str(pv.get("updatedByUser"))),
-            dict(name="note", value=str(pv.get("note"))),
-
+            dict(name="note", value=str(pv.get("note")))
         ]
     )))
 except Exception as e:

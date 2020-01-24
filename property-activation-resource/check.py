@@ -6,7 +6,7 @@ from os import path
 
 from akamai.concourse.property_activation import PropertyActivationCheck
 from akamai.requests import EdgeGridSession
-from akamai.papi import get_property_descriptor, get_property_activations
+from akamai.papi import PropertyDescriptor, get_property_descriptor, get_property_activations
 from akamai.shared import Network
 
 try:
@@ -26,15 +26,20 @@ try:
         client_token=source.client_token,
         client_secret=source.client_secret
     )
+
+    result = []
     pd = get_property_descriptor(session, source.property)
-    atvs = get_property_activations(session, pd.contractId, pd.groupId, pd.propertyId)
-    filtered = filter(source.match, atvs)
-    latest = filter(lambda atv: atv.get("activationId") >= str(check.activationId), filtered)
-    atv_ids = map(lambda atv: dict(
-        activationId=str(atv["activationId"]),
-        propertyVersion=str(atv["propertyVersion"])
-    ), latest)
-    print(json.dumps(sorted(atv_ids, key=lambda atv: atv.get("activationId"))))
+    if isinstance(pd, PropertyDescriptor):
+        atvs = get_property_activations(session, pd.contractId, pd.groupId, pd.propertyId)
+        filtered = filter(source.match, atvs)
+        latest = filter(lambda atv: atv.get("activationId") >= str(check.activationId), filtered)
+        atv_ids = map(lambda atv: dict(
+            activationId=str(atv["activationId"]),
+            propertyVersion=str(atv["propertyVersion"]),
+            updateDate=str(atv["updateDate"]),
+        ), latest)
+        result = sorted(atv_ids, key=lambda atv: atv.get("activationId"))
+    print(json.dumps(result))
 except Exception as e:
     print("{0}: {1}".format(type(e).__name__, " ".join(e.args)), file=sys.stderr)
-    sys.exit(1)
+    sys.exit(2)
