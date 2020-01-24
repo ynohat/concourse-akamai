@@ -84,4 +84,31 @@ rules.json
 etag
 ```
 
-### `out`: unsupported for now
+## Example
+
+```
+resource_types:
+- name: property-activation
+  type: docker-image
+  source:
+    repository: ynohat/concourse-akamai-property-activation-resource
+    tag: latest
+
+resources:
+- name: master-prod-atv
+  type: property-activation
+  check_every: 60s
+  source:
+    property: golden-master
+    network: PRODUCTION
+    host: ((eg_host))
+    access_token: ((eg_access_token))
+    client_token: ((eg_client_token))
+    client_secret: ((eg_client_secret))
+
+jobs:
+- name: deploy-child
+  plan:
+  - get: master-prod-atv
+    trigger: true
+```
